@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Offers - Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(88, 28, 135, 0.85), rgba(124, 58, 237, 0.75)),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect fill="%234c1d95" width="1920" height="1080"/></svg>');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Beautiful overlay pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 25% 30%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 75% 70%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(168, 85, 247, 0.1) inset;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+            transition: all 0.4s ease;
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%);
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(236, 72, 153, 0.6);
+        }
+
+        .btn-sent {
+            background: linear-gradient(135deg, #a78bfa 0%, #c084fc 100%);
+            cursor: not-allowed;
+            opacity: 0.95;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .7;
+            }
+        }
+
+        /* Side Navigation Styles */
+        .sidenav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%);
+            padding: 2rem 0;
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-right: 2px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .sidenav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .sidenav-collapsed {
+            width: 80px;
+        }
+
+        .sidenav-logo {
+            text-align: center;
+            padding: 0 1.5rem 2rem 1.5rem;
+            border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .sidenav-item {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            margin: 0.3rem 0;
+        }
+
+        .sidenav-item:hover {
+            background: rgba(236, 72, 153, 0.15);
+            color: #ec4899;
+            border-left-color: #ec4899;
+        }
+
+        .sidenav-item.active {
+            background: rgba(236, 72, 153, 0.2);
+            color: #ec4899;
+            border-left-color: #ec4899;
+            font-weight: 600;
+        }
+
+        .sidenav-icon {
+            font-size: 1.8rem;
+            min-width: 2.5rem;
+            margin-right: 1rem;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            left: 260px;
+            top: 20px;
+            background: rgba(236, 72, 153, 0.9);
+            border: 2px solid rgba(236, 72, 153, 0.5);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+
+        .toggle-btn:hover {
+            background: rgba(236, 72, 153, 1);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .sidenav {
+                width: 80px;
+            }
+
+            .sidenav-text {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+
+            .toggle-btn {
+                left: 60px;
+            }
+        }
+
+        /* Premium title styling */
+        .premium-title {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #ec4899 0%, #d946ef 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Preview box styling */
+        .preview-box {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
+            border: 2px solid rgba(236, 72, 153, 0.2);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Side Navigation -->
+    <nav class="sidenav" id="sidenav">
+        <div class="sidenav-logo">
+            <h2 class="text-2xl font-bold heading-font" style="color: #ec4899;">🍽️ Savory</h2>
+        </div>
+        <a href="restaurant-menu-builder.html" class="sidenav-item">
+            <span class="sidenav-icon">📋</span>
+            <span class="sidenav-text">Menu Builder</span>
+        </a>
+        <a href="order-details.html" class="sidenav-item">
+            <span class="sidenav-icon">📦</span>
+            <span class="sidenav-text">Order Details</span>
+        </a>
+        <a href="send-offers.html" class="sidenav-item active">
+            <span class="sidenav-icon">🎁</span>
+            <span class="sidenav-text">Send Offers</span>
+        </a>
+    </nav>
+
+    <!-- Toggle Button -->
+    <button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">
+        ‹
+    </button>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="max-w-5xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-10 slide-in">
+                <h1 class="text-5xl md:text-6xl font-bold heading-font premium-title mb-4">
+                    🎁 Broadcast Special Offers
+                </h1>
+                <p class="text-white text-xl" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
+                    Create compelling offers and send them to your valued customers
+                </p>
+            </div>
+
+            <!-- Main Container -->
+            <div class="glass-effect rounded-3xl shadow-2xl p-8 md:p-12 slide-in">
+
+                <!-- Offer Message Section -->
+                <div class="mb-10">
+                    <label class="block text-gray-800 font-bold mb-4 text-xl heading-font flex items-center gap-2">
+                        <span class="text-2xl">📝</span> Today's Special Offers
+                    </label>
+                    <textarea id="offerMessage" rows="10"
+                        placeholder="Craft your irresistible offer message here...&#10;&#10;Example:&#10;🎉 LIMITED TIME SPECIAL! 🎉&#10;&#10;🍕 Gourmet Pizza - 25% OFF&#10;🍔 Premium Burger Combo - Buy 1 Get 1 FREE&#10;🥤 Complimentary Beverage with any order&#10;🍰 Free Dessert on orders above Rs. 2000&#10;&#10;⏰ Valid Today Only! ⏰&#10;📞 Order Now and Savor the Savings!"
+                        class="w-full px-6 py-5 border-3 border-gray-200 rounded-2xl text-lg focus:border-pink-500 transition-all resize-none font-medium"
+                        required></textarea>
+                    <p class="text-sm text-gray-600 mt-3 flex items-center gap-2">
+                        <span class="text-lg">💡</span>
+                        <span>Include emojis, clear details, and create urgency to maximize engagement</span>
+                    </p>
+                </div>
+
+                <!-- Character Count -->
+                <div class="mb-8 text-right">
+                    <span class="text-base text-gray-700 font-semibold">
+                        Character Count: <span id="charCount" class="font-bold text-pink-600 text-lg">0</span>
+                    </span>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="mb-10 preview-box rounded-2xl p-7">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2 heading-font">
+                        <span class="text-2xl">👁️</span> Live Preview
+                    </h3>
+                    <div id="messagePreview"
+                        class="bg-white rounded-xl p-6 min-h-[150px] whitespace-pre-wrap text-gray-800 border-2 border-pink-100 shadow-inner text-base leading-relaxed">
+                        <span class="text-gray-400 italic">Your amazing offer will appear here as you type...</span>
+                    </div>
+                </div>
+
+                <!-- Send Button -->
+                <div class="pt-8 border-t-2 border-gray-200">
+                    <button onclick="sendOffers()" id="sendBtn"
+                        class="w-full btn-success text-white px-10 py-6 rounded-2xl font-bold text-2xl shadow-2xl flex items-center justify-center gap-4 heading-font hover:gap-5 transition-all">
+                        <span class="text-3xl">📤</span>
+                        Broadcast to All Customers
+                    </button>
+                </div>
+
+                <!-- Info Notice -->
+                <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 p-6 rounded-xl">
+                    <div class="flex items-start">
+                        <span class="text-3xl mr-4">ℹ️</span>
+                        <div>
+                            <p class="text-blue-900 font-bold text-lg heading-font">Broadcast Information</p>
+                            <p class="text-blue-800 mt-2">
+                                Your offer message will be delivered to all registered customers through our secure
+                                webhook integration system.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-white text-lg" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+                <p>Spreading Joy & Savings with ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Webhook URL
+        const WEBHOOK_URL = "https://n8n-klmi.onrender.com/webhook-test/9e74a7ce-778d-4e7f-afbd-b9a0604fa094";
+
+        // Track if offers have been sent
+        let offersSent = false;
+
+        // Character count and preview update
+        const offerMessage = document.getElementById('offerMessage');
+        const charCount = document.getElementById('charCount');
+        const messagePreview = document.getElementById('messagePreview');
+
+        offerMessage.addEventListener('input', function () {
+            const text = this.value;
+            charCount.textContent = text.length;
+
+            if (text.trim()) {
+                messagePreview.innerHTML = text;
+            } else {
+                messagePreview.innerHTML = '<span class="text-gray-400 italic">Your amazing offer will appear here as you type...</span>';
+            }
+        });
+
+        async function sendOffers() {
+            const message = offerMessage.value.trim();
+
+            if (!message) {
+                alert('❌ Please enter an offer message before sending!');
+                return;
+            }
+
+            const sendBtn = document.getElementById('sendBtn');
+
+            // Prevent double sending
+            if (offersSent) {
+                return;
+            }
+
+            // Store original button state
+            const originalText = sendBtn.innerHTML;
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span class="pulse-animation">📤 Broadcasting...</span>';
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        offer_message: message,
+                        timestamp: new Date().toISOString(),
+                        character_count: message.length
+                    })
+                });
+
+                console.log('Webhook response status:', response.status);
+                console.log('Sent data:', {
+                    offer_message: message,
+                    timestamp: new Date().toISOString(),
+                    character_count: message.length
+                });
+
+                // Update button to show sent state
+                offersSent = true;
+                sendBtn.innerHTML = '✅ Broadcast Sent';
+                sendBtn.classList.remove('btn-success');
+                sendBtn.classList.add('btn-sent');
+
+                // Show success message
+                alert('✅ Success! Your offer has been broadcast to all customers!');
+
+            } catch (error) {
+                console.error('Error sending offers:', error);
+                alert('❌ Failed to send offers. Please check the webhook URL and try again.\n\nError: ' + error.message);
+
+                // Restore button state on error
+                sendBtn.innerHTML = originalText;
+                sendBtn.disabled = false;
+            }
+        }
+
+        // Sidebar toggle functionality
+        function toggleSidebar() {
+            const sidenav = document.getElementById('sidenav');
+            const mainContent = document.getElementById('mainContent');
+            const toggleBtn = document.getElementById('toggleBtn');
+
+            sidenav.classList.toggle('sidenav-collapsed');
+
+            if (sidenav.classList.contains('sidenav-collapsed')) {
+                mainContent.style.marginLeft = '80px';
+                toggleBtn.style.left = '60px';
+                toggleBtn.innerHTML = '›';
+            } else {
+                mainContent.style.marginLeft = '280px';
+                toggleBtn.style.left = '260px';
+                toggleBtn.innerHTML = '‹';
+            }
+        }
+    </script>
+</body>
+
+</html>
